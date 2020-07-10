@@ -140,12 +140,9 @@ class NimAI():
             return 0
         else:
             for action in actions:
-                key = (tuple(state), action)
-                if key in self.q:
-                    rewards.append(self.q[key])
-                else:
-                    rewards.append(0)
-
+                reward = self.get_q_value(state, action)
+                rewards.append(reward)
+                
         return max(rewards)
 
     def choose_action(self, state, epsilon=True):

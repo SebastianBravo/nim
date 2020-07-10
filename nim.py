@@ -101,10 +101,9 @@ class NimAI():
         Return the Q-value for the state `state` and the action `action`.
         If no Q-value exists yet in `self.q`, return 0.
         """
-
-        q_value =self.q[(tuple(state), action)]
-
-        return q_value if q_value else 0 
+        key = (tuple(state), action)
+        
+        return self.q[key] if key in self.q else 0
 
     def update_q_value(self, state, action, old_q, reward, future_rewards):
         """
@@ -141,9 +140,9 @@ class NimAI():
             return 0
         else:
             for action in actions:
-                reward = self.q[(tuple(state), action)]
-                if reward:
-                    rewards.append(reward)
+                key = (tuple(state), action)
+                if key in self.q:
+                    rewards.append(self.q[key])
                 else:
                     rewards.append(0)
 

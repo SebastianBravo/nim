@@ -121,7 +121,7 @@ class NimAI():
         is the sum of the current reward and estimated future rewards.
         """
         x = (tuple(state), action)
-        self.q[x] = old_q + (self.alpha * (reward + future_rewards - old_q))
+        self.q[x] = old_q + self.alpha * (reward + future_rewards - old_q)
 
     def best_future_reward(self, state):
         """
@@ -160,22 +160,29 @@ class NimAI():
         If multiple actions have the same Q-value, any of those
         options is an acceptable return value.
         """
-        actions = Nim.available_actions(state)
-        max_q = max(self.q.values())
+        actions = list(Nim.available_actions(state))
+        qs = self.q.values()
+        max_q = max(qs) if len(qs) > 0 else 0
 
         if epsilon:
             if random.random() <= self.epsilon:
                 return random.choice(actions)
             else:
-                for action in actions:
-                    key = (tuple(state), action)
-                    if self.q[key] == max_q:
-                        return action
+                return self.choose_action(state, False)
         else:
+            best_action = ()
+            best_q = -math.inf
             for action in actions:
                 key = (tuple(state), action)
-                if self.q[key] == max_q:
-                    return action
+                if key in self.q:
+                    if best_q < self.q[key]:
+                        best_q = self.q[key]
+                        best_action = action
+                else:
+                    if best_q < 0:
+                        best_q = 0
+                        best_action = action
+            return best_action
 
 
 def train(n):

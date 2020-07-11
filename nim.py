@@ -133,7 +133,10 @@ class NimAI():
         Q-value in `self.q`. If there are no available actions in
         `state`, return 0.
         """
+        # Set of possible actions to take
         actions = Nim.available_actions(state)
+
+        # Initialize an empty list to keep track of q values
         rewards = []
         
         if len(actions) == 0:
@@ -160,15 +163,23 @@ class NimAI():
         If multiple actions have the same Q-value, any of those
         options is an acceptable return value.
         """
+        # List of possible actions to take 
         actions = list(Nim.available_actions(state))
+
+        # List of all q values
         qs = self.q.values()
+
+        # Max q value 
         max_q = max(qs) if len(qs) > 0 else 0
 
+        # Epsilon-Greedy Decision-Making
         if epsilon:
             if random.random() <= self.epsilon:
                 return random.choice(actions)
             else:
                 return self.choose_action(state, False)
+
+        # Greedy Decision-Making
         else:
             best_action = ()
             best_q = -math.inf
